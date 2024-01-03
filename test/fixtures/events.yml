@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  black_out_times: MyString
+  name: MyString
+  start_date: 2024-01-02 21:01:16
+  end_date: 2024-01-02 21:01:16
+  slot_length: 1
+  visible: false
+  students_per_slot: 1
+  has_submissions: false
+  submission_deadline: 2024-01-02 21:01:16
+
+two:
+  black_out_times: MyString
+  name: MyString
+  start_date: 2024-01-02 21:01:16
+  end_date: 2024-01-02 21:01:16
+  slot_length: 1
+  visible: false
+  students_per_slot: 1
+  has_submissions: false
+  submission_deadline: 2024-01-02 21:01:16

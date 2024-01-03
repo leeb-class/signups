@@ -1,15 +1,53 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Signups</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  </head>
-
-  <body>
-    <%= yield %>
-  </body>
+<html lang="en" ng-app="myApp">
+<head>
+  <title>Signups</title>
+  <script>
+    config={
+       base: '<%=ENV['RAILS_RELATIVE_URL_ROOT']%>'
+     };
+     <% if current_user%>
+     user_role = '<%=current_user.role%>';
+     user_id = '<%=current_user.id%>';
+     <% end %>
+  </script>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= render "layouts/analytics"%>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="container main-container" style="max-width: 600px">
+    <div style="position:relative">
+    <h1>Signups</h1>
+    <%if current_user%>
+    <span class="header">
+      <%= link_to(current_user.full_name, edit_user_path(current_user)) %>
+   
+      <strong><%= link_to("Log out", destroy_user_session_path, :method=>:delete) %></strong>
+    </span>
+    <%end%>
+    </div>
+    <div class="alert alert-warning">
+      NOTE: All times are local. Make sure your computer is set to MIT time (EST).
+    </div>
+    <%if alert %>
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <%=alert%>
+      </div>
+    <%end%>
+    <%if notice %>
+      <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <%=notice%>
+      </div>
+    <%end%>
+    <div class="contents">
+      <%=yield%>
+    </div>
+  </div>
+</body>
 </html>

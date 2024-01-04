@@ -1,0 +1,23 @@
+<div>
+  <h2>Submissions for <span class="text-muted"><%=@event.name%></span></h2>
+  <table class="table">
+    <thead>
+        <th>Name</th>
+        <th>Submitted</th>
+        <th></th>
+    </thead>
+    <tbody>
+      <% @event.submissions.each do |submission| %>
+        <tr>
+          <td><%=submission.user.full_name%></td>
+          <td><%=submission.created_at.strftime("%b %d %H:%M")%></td>
+          <td><a href="/signups<%=submission.file.url%>" class="btn btn-default">
+              <i class="icon-download-alt"></i> Download</a>
+          </td>
+      </tr>
+      <%end%>
+    </tbody>
+  </table>
+  
+ 
+</div>

@@ -1,0 +1,121 @@
+<div ng-controller="EventCtrl" ng-init="init('<%=@event.id%>')">
+  <div style="position:relative">
+    <!--Event Name-->
+    <h2>{{event.name}}</h2>
+    <!--Hide or Show Event (admin only)-->
+    <button type="button" class="btn btn-success btn-lg event-action"
+      ng-show="event.visible==false && admin" ng-click="showEvent()">
+      <i class="icon-eye-open"></i>   Make Visible</button>
+    <button type="button" class="btn btn-danger btn-lg event-action"
+      ng-show="event.visible && admin" ng-click="hideEvent()">
+      <i class="icon-eye-close"></i>   Hide</button>
+  </div>
+  <!--status of # slots filled, and students missing-->
+  <p class="lead">{{event.slots_filled}} of {{event.slots.length}} slots filled. 
+  <span ng-pluralize count=event.missing_students.length ng-class="event.missing_students.length>0 | warningClass"
+                     when="{'0': 'No students missing.',
+                            '1': '1 student missing.',
+                            'other': '{{event.missing_students.length}} students missing'}"
+  </span></p>
+  <!--add slot form-->
+   <form class="form-inline clearfix" role="form">
+    <!--date select-->
+    <div class="form-group">
+      <label class="sr-only">Date</label>
+      <select ng-model="slot.start_date"  class="form-control" 
+       ng-options="date  | abbrevDate for date in event.dates"></select>
+    </div>
+    <!-- time select -->
+    <div class="form-group" style="max-width:50%">
+      <label class="sr-only">Time</label>
+      <timepicker ng-model="slot.start_time" hour-step="1"
+        minute-step="event.slot_length" show-meridian="true" read-only="true"></timepicker>
+    </div>
+    <!--location select-->
+    <div class="form-group" ng-class="errors.location | errorClass">
+      <label class="sr-only">Location</label>
+      <input type="text" ng-model="slot.location" class="form-control" placeholder="Location">
+    </div>
+    <!--standard slot creation button (TA only)-->
+    <button type="button" class="btn btn-success " ng-click="createSlot()" ng-show="ta">
+      <i class="icon-plus"></i>  Add slot</button>
+    <!--universal slot creation button (admin only)-->
+    <div ng-show="admin">
+      <button type="button" class="btn btn-success" ng-click="createSlot()">
+        <i class="icon-plus"></i>   Add slot for 
+      </button>
+      <select  ng-model="taForSlot" class="form-control" ng-change = "errors = []" style="max-width:25%"
+        ng-options="ta | name for ta in availableTAs"></select>
+    </div>
+    <!--validation errors-->
+    <div ng-show="errors['ta'] && admin" class="form-group text-danger">{{taForSlot | name}} is {{errors['ta'][0] }}</div>
+    <div ng-show="errors['ta'] && ta" class="form-group text-danger">you are {{errors['ta'][0] }}</div>
+    <span ng-show="errors['ta'] && errors['location']" class="form-group text-danger" > and </span>
+    <div ng-show="errors['location']" class="form-group text-danger">the location {{errors['location'][0]}}</div>
+  </form>
+  
+  <hr/>
+  <!--existing slots table-->
+   <table class="table">
+    <thead>
+        <th>Time</th>
+        <th>TA</th>
+        <th>Student</th>
+        <th>Location</th>
+        <th></th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="slot in event.slots | orderBy:'start_time'" >
+        <!--slot time-->
+        <td>{{slot.start_time | time}}</td>
+        <!--slot ta-->
+        <td><a href="mailto:{{slot.ta.email}}">{{slot.ta | name}}</a></td>
+        <!--slot student-->
+        <td><a href="mailto:{{slot.student.email}}" ng-show="slot.student">{{slot.student | name}} </a>
+          <span ng-show="admin && slot.student!=null">
+            <i class="icon-remove remove clickable"
+            action="removeSignup(slot)" confirmable></i>
+          </span>
+          <!--add missing student to a slot (admin only)-->
+           <select ng-model="slot.student"  class="form-control" 
+              ng-show="slot.student ==null && admin" ng-change="assignSlot(slot)"
+              ng-options="student  | name for student in event.missing_students"></select>
+        </td>
+        <!--slot location-->
+        <td>{{slot.location}}</td>
+        <td  ng-show="removableSlot(slot)">
+          <i class="icon-trash clickable" action="deleteSlot(slot)" confirmable></i></td>
+      </tr>
+    </tbody>
+  </table>
+  <hr/>
+  <div class="row">
+    <div class="col-md-6">
+      <!-- list of missing students -->
+      <span class="lead" ng-show="event.missing_students.length>0">Missing Signups:
+          <a href="mailto:{{event.missing_students | emails}}"><i class="icon-envelope clickable" ></i></a>
+      </span>
+      <ul style="font-size: 1.3em" ng-show="event.missing_students.length>0">
+        <li class="list-unstyled"
+        ng-repeat="student in event.missing_students | orderBy:'last_name'">
+          <a href="mailto:{{student.email}}">{{student | name}}</a></li>
+      </ul> 
+    </div>
+    <div class="col-md-6" ng-show="event.has_submissions">
+      <!-- list of missing submissions -->
+      <span class="lead" ng-show="event.missing_submissions.length>0">Missing Submissions:
+          <a href="mailto:{{event.missing_submissions | emails}}"><i class="icon-envelope clickable" ></i></a>
+      </span>
+      <ul style="font-size: 1.3em" ng-show="event.missing_submissions.length>0">
+        <li class="list-unstyled"
+        ng-repeat="student in event.missing_submissions | orderBy:'last_name'">
+          <a href="mailto:{{student.email}}">{{student | name}}</a></li>
+      </ul> 
+    </div>
+  </div>
+ 
+  <a type="button" class="btn btn-primary" href = "<%=edit_event_path%>" ng-show="admin">Edit Event</a>
+  <a  class="btn btn-default" href="<%=events_path%>">Back</a>
+  <a class="btn btn-default pull-right" href="<%=submissions_event_path%>">
+    <i class="icon-file-text"></i>  Submissions</a>
+</div>

@@ -1,0 +1,25 @@
+<div ng-controller="EventsCtrl" ng-init="refresh()">
+  <h2>Events</h2>
+  <table class="table">
+    <thead>
+        <th>Name</th>
+        <th>Dates</th>
+        <th>Slots</th>
+        <th ng-show="admin"></th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="event in events"  class="clickable">
+        <td ng-click="showEvent(event)">{{event.name}}</td>
+        <td ng-click="showEvent(event)">{{event.dateRange() | dateRange}}</td>
+        <td ng-click="showEvent(event)">{{event.slot_length}} min</td>
+        <td ng-show="admin">
+          <i class="icon-trash clickable" action="deleteEvent(event)" confirmable></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <a type="button" class="btn btn-primary" ng-show="admin"
+    href="<%=new_event_path%>"><i class="icon-plus"></i> Add Event</a>
+  <a type="button" class="btn btn-default" href="<%=root_path%>" ng-show="admin">Home</a>
+</div>

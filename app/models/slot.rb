@@ -8,7 +8,7 @@ class Slot < ApplicationRecord
     belongs_to :event
 
     #---Attributes---
-    attr_accessible :location, :start_time
+    #attr_accessible :location, :start_time
 
     #---Validations---
     validates :ta, :presence=>true

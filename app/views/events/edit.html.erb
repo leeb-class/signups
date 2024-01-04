@@ -1,0 +1,11 @@
+<div ng-controller="EventCtrl" ng-init="init(<%=@event.id%>)">
+
+<h2>Editing Event</h2>
+<p class="lead text-warning">Any slots that are not in the new date range will be removed</p>
+<%= render 'form' %>
+<div class="actions">
+    <button type="button" class="btn btn-primary" ng-click="updateEvent()">Update event</button>
+    <a class="btn btn-default" href="<%=event_path%>">Cancel</a>
+  </div>
+  
+</div>

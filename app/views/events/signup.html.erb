@@ -1,0 +1,78 @@
+<div ng-controller="SignupCtrl" ng-init="init('<%=@event.id%>')">
+  <div style="position:relative">
+  <h2>{{event.name}}</h2>
+  
+   <div ng-show="!signup_enabled" class="clearfix">
+     <span class="lead">Your signup is on {{slot.start_time.format("mmm dd")}} at
+        {{slot.start_time.format("h:MM TT")}} <br> with {{slot.ta | name}} in {{slot.location}}
+     </span>
+     <button type="button" class="btn btn-danger pull-right" ng-show="changeable(slot)" 
+      ng-click="removeSignup()">
+       <i class="icon-remove"></i>  Cancel Signup
+     </button>
+   </div>
+   <!--file submission -->
+   <div class="row" style="margin-top: 10px" ng-show="event.has_submissions">
+     <!-- live submissions (can still submit)-->
+     <div class="col-md-offset-1 col-md-8 well" ng-show="acceptingSubmissions()" >
+       <div ng-show="!submission">
+         <% if @event.has_submissions%>
+         <%=form_for @submission, :html => {:multipart => true, :class=>"form-inline"} do |f| %>
+          <h5>Submit your code by <strong>{{event.submission_deadline.format("mmm dd, h:MM TT")}}</strong>:</h5>
+          <%=f.hidden_field :event_id%>
+          <form-group>
+            <%=f.file_field :file%>
+          </form-group>
+          <form-group >
+            <%=f.submit "Upload submission", :class=>"btn btn-primary", :style=>"margin-top: 10px"%>
+          </form-group>
+         <%end%>
+         <%end%>
+       </div>
+       <div ng-show="submission">
+         <h5>Submit your code by <strong>{{event.submission_deadline.format("mmm dd, h:MM TT")}}</strong>:</h5>
+         <span class="lead text-success">Code Received</span>
+         <a class="btn btn-default" href="{{submission.file.url}}"
+          popover="download" popover-trigger="mouseenter" 
+          popover-popup-delay="1000" popover-placement="bottom"><i class="icon-download-alt"></i></a>
+         <button class="btn btn-default" ng-click="removeSubmission()"
+          popover="remove submission" popover-trigger="mouseenter" 
+          popover-popup-delay="1000" popover-placement="bottom">
+           <i class="icon-remove"></i></button>
+       </div>
+     </div>
+     <!--submission period over-->
+     <div class="col-md-offset-1 col-md-8 well" ng-show="!acceptingSubmissions()" >
+       <!-- successful submission-->
+       <div ng-show="submission">
+         <span class="lead text-success">Submission Received</span>
+         <a class="btn btn-default pull-right"
+           href="{{submission.file.url}}">
+           <i class="icon-download-alt"></i>  Download</a>
+       </div>
+       <!--missing submission-->
+       <div ng-show="!submission">
+         <p class="lead text-danger">Missed deadline for submission</p>
+       </div>
+    </div>
+   </div>
+   <table class="table">
+    <thead>
+        <th>Time</th>
+        <th>Student</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="slot in event.slots | orderBy:'start_time'" >
+        <td>{{slot.start_time | time}}</td>
+        <td> 
+          <button type="button" class="btn btn-default" 
+            ng-show="slot.student==null && signup_enabled && changeable(slot)" ng-click="signup(slot)">Sign Up</button>
+          <span ng-show="slot.student!=null">{{slot.student | name}}</span>
+        </td>
+      
+      </tr>
+    </tbody>
+  </table>
+  
+ 
+</div>

@@ -1,0 +1,10 @@
+<div ng-controller="EventCtrl" ng-init="init()">
+<h2>New event</h2>
+
+<%= render 'form' %>
+<div class="actions">
+    <button type="button" class="btn btn-primary" ng-click="createEvent()">Create event</button>
+    <a class="btn btn-default" href="<%=events_path%>">Cancel</a>
+</div>
+</div>
+

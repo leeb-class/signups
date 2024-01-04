@@ -5,8 +5,8 @@ class Event < ActiveRecord::Base
     has_many :submissions, dependent: :destroy
     
     #---Attributes---
-    attr_accessible :start_date, :end_date, :black_out_times, :name, :slot_length, :visible,
-                    :students_per_slot, :has_submissions, :submission_deadline
+    #attr_accessible :start_date, :end_date, :black_out_times, :name, :slot_length, :visible,
+    #                :students_per_slot, :has_submissions, :submission_deadline
     
     #---Scopes---
     scope :active, -> {where(visible:true).where("end_date > ?",Time.now)}

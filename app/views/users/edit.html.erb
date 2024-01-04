@@ -1,0 +1,6 @@
+<%if current_user.id == @user.id%>
+<h2>My Account</h2>
+<% else %>
+<h2>Editing user</h2>
+<% end %>
+<%= render 'form' %>

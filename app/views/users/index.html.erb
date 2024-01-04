@@ -1,0 +1,24 @@
+<div ng-controller="UserCtrl" ng-init="refresh()">
+  <h2>Users</h2>
+  <table class="table">
+    <thead>
+        <th class="clickable" ng-click="sortBy('last_name')">Name</th>
+        <th class="clickable" ng-click="sortBy('email')">Username</th>
+        <th class="clickable" ng-click="sortBy('role')">Role</th>
+        <th></th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="user in users | orderBy:predicate"  class="clickable">
+        <td ng-click="editUser(user)">{{user.first_name}} {{user.last_name}}</td>
+        <td ng-click="editUser(user)">{{user.email}}</td>
+        <td ng-click="editUser(user)">{{user.role}}</td>
+        <td><i class="icon-trash clickable" action="deleteUser(user)" confirmable></i></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <a type="button" class="btn btn-primary" href="<%=new_user_path%>"><i class="icon-plus"></i> Add User</a>
+  <a type="button" class="btn btn-default" href="<%=root_path%>">Home</a>
+  <a type="button" class="btn btn-default pull-right" href="<%=bulk_users_path%>"><i class="icon-group"></i> Bulk Add</a>
+
+</div>

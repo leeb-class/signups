@@ -1,0 +1,84 @@
+<div ng-controller="BulkUserCtrl" ng-init="init()">
+  <h2>Add/Remove Students</h2>
+  <div class="radio" ng-hide="true">
+    <label>
+      <input type="radio" ng_model="input_type"  value="csv" ng-change="validateInput()"></input>
+      Last Name, First Name, Athena Username
+    </label>
+  </div>
+  <div class=" radio">
+    <label>
+      <input type="radio" ng-model="input_type" value="list" ng-change="validateInput()"></input>
+      MIT Class List
+    </label>
+  </div>
+  <hr>
+  <form class="clearfix">
+    <div class="form-group">
+    <textarea ui-codemirror="editorOptions" 
+      placeholder="John, Doe, jdoe, 1234" class="form-control" rows=10
+       ng-model="bulk_input" ng-change="validateInput()"></textarea>
+    </div>
+    <div class="form-group">
+      <span ng-show="syntax_error" class="text-danger">Error parsing user, check your syntax</span>
+      <p ng-show="errors['first_name']" class="text-danger">First name {{errors['first_name'][0]}}</p>
+      <p ng-show="errors['last_name']" class="text-danger">Last name {{errors['last_name'][0]}}</p>
+      <p ng-show="errors['username']" class="text-danger">Username {{errors['username'][0]}}</p>
+      <p ng-show="errors['password']" class="text-danger">Password {{errors['password'][0]}}</p>
+    </div>
+  </form>
+  <span class="lead" ng-show="input_type=='list' && error_msg==''">
+    {{txt_added_students}} students + {{txt_removed_students}} dropped =  
+    {{txt_added_students+txt_removed_students}} total</span>
+  <span class="lead" ng-show="input_type=='csv' && error_msg==''">
+    {{txt_added_students}} students total
+  </span>
+  <span class="lead text-danger" ng-show="error_msg!=''">
+    {{error_msg}}
+  </span>
+  <div class="row">
+    <!--Students to add-->
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">Students to Add</div>
+        <div class="panel-body">
+          <table>
+            <tbody>
+              <tr ng-repeat="student in new_students">
+                <td>{{student.first_name}} {{student.last_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr/>
+          <button type="button" class="btn btn-primary btn-block" ng-click="addStudents()"
+            ng-disabled="busy || error_msg!='' || new_students.length==0">
+            <i class="icon-spinner icon-spin" ng-show="busy"></i>Add Students
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--Students to remove-->
+    <div class="col-md-6" ng-show="input_type=='list'">
+      <div class="panel panel-default">
+        <div class="panel-heading"> Students to Remove</div>
+        <div class="panel-body">
+          <table>
+            <tbody>
+              <tr ng-repeat="student in removed_students">
+                <td>{{student.first_name}} {{student.last_name}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr/>
+          <button type="button" class="btn btn-danger btn-block" ng-click="removeStudents()"
+            ng-disabled="busy || error_msg!='' || removed_students.length==0">
+            <i class="icon-spinner icon-spin" ng-show="busy"></i>Remove Students
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--end-->
+  </div>
+  
+  <a type="button" href="<%=users_path%>" class="btn btn-default" ng-disabled="busy">Done</a>
+</div>

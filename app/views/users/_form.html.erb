@@ -1,0 +1,43 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+   <p class="alert-warning">Please fix the following errors</p>
+  <% end %>
+  <div class="form-group <% if @user.errors[:first_name].first %>has-error<%end%>">
+    <%= f.label :first_name, :class=>"control-label"%>
+    <%= f.text_field :first_name, :class=>"form-control"%>
+    <span class="help-block"><%=@user.errors[:first_name].first%></span>
+  </div>
+  <div class="form-group <% if @user.errors[:last_name].first %>has-error<%end%>">
+    <%= f.label :last_name, :class=>"control-label" %>
+    <%= f.text_field :last_name, :class=>"form-control"%>
+    <span class="help-block"><%=@user.errors[:last_name].first%></span>
+  </div>
+  <div class="form-group <% if @user.errors[:username].first %>has-error<%end%>">
+    <%= f.label :username, :class=>"control-label" %>
+    <%= f.text_field :username, :class=>"form-control"%>
+    <span class="help-block"><%=@user.errors[:username].first%></span>
+  </div>
+  <div class="form-group <% if @user.errors[:password].first %>has-error<%end%>">
+    <%= f.label :password, :class=>"control-label" %>
+    <% unless @user.id.blank? %>
+    <span class="text-muted" style="padding-left: 15px">if left blank, password is unchanged</span>
+    <% end %>
+    <%= f.password_field :password, :class=>"form-control"%>
+    <span class="help-block"><%=@user.errors[:password].first%></span>
+  </div>
+  <div class="form-group <% if @user.errors[:password_confirmation].first %>has-error<%end%>">
+    <%= f.label :password_confirmation, :class=>"control-label" %>
+    <%= f.password_field :password_confirmation, :class=>"form-control"%>
+    <span class="help-block"><%=@user.errors[:password_confirmation].first%></span>
+  </div>
+  <%if current_user.admin?%>
+  <div class="form-group">
+    <%= f.label :role %>
+    <%= f.select(:role,['student','ta','admin'],{},{ :class=>"form-control"})%>
+  </div>
+  <%end%>
+  <div class="actions">
+    <%= f.submit "Update", :class=>"btn btn-primary"%>
+    <a class="btn btn-default" href="<%=users_path%>">Cancel</a>
+  </div>
+<% end %>

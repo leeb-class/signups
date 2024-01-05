@@ -11,7 +11,7 @@
         <tr>
           <td><%=submission.user.full_name%></td>
           <td><%=submission.created_at.strftime("%b %d %H:%M")%></td>
-          <td><a href="/signups<%=submission.file.url%>" class="btn btn-default">
+          <td><a href="<%=url_for(submission.file)%>",  class="btn btn-default">
               <i class="icon-download-alt"></i> Download</a>
           </td>
       </tr>
